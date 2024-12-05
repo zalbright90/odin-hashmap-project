@@ -2,32 +2,61 @@ import { djb2_hash } from './hash.js';
 import { accessBucket } from './utils.js';
 
 export class HashMap {
-    constructor(capacity = 16) {
+    constructor(capacity = 16, loadFactor = 0.75) {
         this.buckets = new Array(capacity);
         this.capacity = capacity;
-        this.loadFactor = 0.75;
+        this.size = 0;
+        this.loadFactor = loadFactor;
     }
 
     hash(key) {
         return djb2_hash(key, this.capacity);
     }
 
-    set(key, value) {
-        const index = this.hash(key);
-        accessBucket(index, this.buckets);
+    resize() {
+        const newBuckets = new Array(this.capacity * 2);
+        this.capacity *= 2;
+        this.size = 0;
 
-        if (!this.buckets[index]) {
-            this.buckets[index] = [];
+        for (const bucket of this.buckets) {
+            if (bucket) {
+                for (const [key, value] of bucket) {
+                    this.set(key, value, newBuckets);
+                }
+            }
         }
-        this.buckets[index].push([key, value]);
+
+        this.buckets = newBuckets;
+    }
+
+    set(key, value, customBuckets = this.buckets) {
+        const index = this.hash(key);
+        const bucket = customBuckets[index];
+
+        if (!bucket) {
+            customBuckets[index] = [[key, value]];
+            this.size++;
+        } else {
+            for (let i = 0; i < bucket.length; i++) {
+                if (bucket[i][0] === key) {
+                    bucket[i][1] === value;
+                    return;
+                }
+            }
+            bucket.push([key, value]);
+            this.size++;
+        }
+
+        if (this.size / this.capacity > this.loadFactor) {
+            this.resize();
+        }
     }
 
     get(key) {
         const index = this.hash(key);
-        accessBucket(index, this.buckets);
+        const bucket = accessBucket(index, this.buckets);
 
-        const bucket = this.buckets[index];
-        if (!bucket) {
+        if (bucket) {
             for (let [storedKey, storedValue] of bucket) {
                 if (storedKey === key) {
                     return storedValue;
@@ -35,6 +64,9 @@ export class HashMap {
             }
         }
         return undefined;
+    }
+    has(key) {
+        return this.get(key) !== undefined;
     }
 }
 
