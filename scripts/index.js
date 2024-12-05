@@ -1,4 +1,5 @@
 import { HashMap } from './hashmap.js';
+import { HashSet } from './hashset.js';
 
 const test = new HashMap();
 
@@ -78,3 +79,30 @@ console.log("Test values(): ", test.values());
 
 // Test: entries()
 console.log("Test entries(): ", test.entries());
+
+const testSet = new HashSet();
+
+testSet.set('apple');
+testSet.set('banana');
+testSet.set('carrot');
+testSet.set('dog');
+
+console.log("New set of nodes: ", testSet.keys());
+
+// Test has()
+console.log("Test has() for 'carrot': ", testSet.has('carrot'));
+console.log("Test has() for 'elephant': ", testSet.has('elephant'));
+
+// Test remove()
+console.log("Test remove() for 'dog': ", testSet.remove('dog'));
+console.log("Test remove() for 'ice cream': ", testSet.remove('ice cream'));
+
+// Test length()
+console.log("Test length() after remove: ", testSet.length());
+
+// Test keys()
+console.log("Test keys(): ", testSet.keys());
+
+// Test clear()
+testSet.clear();
+console.log("Test length after clear: ", testSet.length());
