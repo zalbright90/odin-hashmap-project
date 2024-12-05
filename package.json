@@ -1,0 +1,23 @@
+{
+  "name": "odin-hashmap-project",
+  "version": "1.0.0",
+  "description": "A hash map for The Odin Project JavaScript Course. Modular for testing other algorithms in the future",
+  "main": "./scripts/index.js",
+  "scripts": {
+    "start": "node index.js",
+    "lint": "eslint .",
+    "format": "prettier --write.",
+    "prepush": "npm run lint",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Zach Albright || End0Skeleton",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.16.0",
+    "eslint": "^9.16.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.13.0",
+    "prettier": "^3.4.2"
+  }
+}
