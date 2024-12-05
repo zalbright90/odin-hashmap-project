@@ -56,10 +56,25 @@ export class HashMap {
                 }
             }
         }
-        return undefined;
+        return null;
     }
     has(key) {
-        return this.get(key) !== undefined;
+        const index = this.hash(key);
+        
+        try {
+            const bucket = accessBucket(index, this.buckets);
+            if (!bucket) return false;
+
+            for (const [storedKey] of bucket) {
+                if (storedKey === key) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (error) {
+            console.error("Error accessing bucket:", error.message);
+            return false;
+        }
     }
 }
 
