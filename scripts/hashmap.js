@@ -29,27 +29,20 @@ export class HashMap {
         this.buckets = newBuckets;
     }
 
-    set(key, value, customBuckets = this.buckets) {
+    set(key, value) {
         const index = this.hash(key);
-        const bucket = customBuckets[index];
+        if (!this.buckets[index]) {
+            this.buckets[index] = [];
+        }
 
-        if (!bucket) {
-            customBuckets[index] = [[key, value]];
-            this.size++;
-        } else {
-            for (let i = 0; i < bucket.length; i++) {
-                if (bucket[i][0] === key) {
-                    bucket[i][1] === value;
-                    return;
-                }
+        for (let pair of this.buckets[index]) {
+            if (pair[0] === key) {
+                pair[1] = value;
+                return;
             }
-            bucket.push([key, value]);
-            this.size++;
         }
 
-        if (this.size / this.capacity > this.loadFactor) {
-            this.resize();
-        }
+        this.buckets[index].push([key, value]);
     }
 
     get(key) {
