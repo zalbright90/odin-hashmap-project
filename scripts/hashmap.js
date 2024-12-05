@@ -76,5 +76,85 @@ export class HashMap {
             return false;
         }
     }
+
+    remove(key) {
+        const index = this.hash(key);
+
+        try {
+            const bucket = accessBucket(index, this.buckets);
+            if (!bucket) return false;
+
+            for (let i = 0; i < bucket.length; i++) {
+                const [storedKey, storedValue] = bucket[i];
+                if (storedKey === key) {
+                    bucket.splice(i, 1);
+                    return true;
+                }
+            }
+            return false;
+        } catch (error) {
+            console.error("Error accessing bucket:", error.message);
+            return false;
+        }
+    }
+
+    length() {
+        let count = 0;
+
+        for (let i = 0; i < this.buckets.length; i++) {
+            const bucket = this.buckets[i];
+
+            if (bucket) {
+                count += bucket.length;
+            }
+        }
+        return count;
+    }
+
+    clear() {
+        this.buckets = new Array(this.capacity);
+    }
+
+    keys() {
+        const keysArray = [];
+
+        for (let i = 0; i < this.buckets.length; i++) {
+            const bucket = this.buckets[i];
+            if(bucket) {
+                for (let [key] of bucket) {
+                    keysArray.push(key);
+                }
+            }
+        }
+        return keysArray;
+    }
+
+    values() {
+        const valuesArray = [];
+
+        for (let i = 0; i < this.buckets.length; i++) {
+            const bucket = this.buckets[i];
+            if (bucket) {
+                for (let [, value] of bucket) {
+                    valuesArray.push(value);
+                }
+            }
+        }
+        return valuesArray;
+    }
+
+    entries() {
+        const entriesArray = [];
+
+        for (let i = 0; i < this.buckets.length; i++) {
+            const bucket = this.buckets[i];
+            if (bucket) {
+                for (let [key, value] of bucket) {
+                    entriesArray.push([key, value]);
+                }
+            }
+        }
+        return entriesArray;
+    }
 }
 
